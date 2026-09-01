@@ -16,7 +16,7 @@ class Initialize:
 
     @staticmethod
     def get_version_number():
-        return "0.7.3"
+        return "0.7.5"
 
     def run(self, args):
         self.__check_cert(args)
@@ -103,7 +103,7 @@ class Initialize:
                 for line in output:
                     if not line:
                         continue
-                    line = ' '.join(line.split(' ')[1:]).split(':')
+                    line = line.partition(' ')[2].split(':')
                     devices.append(line[1].strip())
 
         elif Initialize.get_os() == 1:  # windows
@@ -153,6 +153,11 @@ class Initialize:
             self.__update_information()
         elif ans['response'] != 'SUCCESS':
             logging.error("Error from server: " + str(ans))
+            if ans['message'] == 'Invalid token!':
+                logging.fatal("Token is invalid, either place the correct token in the config or re-register the agent")
+                if os.path.exists("lock.pid"):
+                    os.unlink("lock.pid")
+                sys.exit(-1)
             sleep(5)
             self.__update_information()
 
@@ -188,13 +193,13 @@ class Initialize:
 
     def __check_cert(self, args):
         cert = self.config.get_value('cert')
-        if cert is None:
+        if not cert:
             if args.cert is not None:
                 cert = os.path.abspath(args.cert)
                 logging.debug("Setting cert to: " + cert)
                 self.config.set_value('cert', cert)
                 
-        if cert is not None:
+        if cert:
             Session().s.cert = cert
             logging.debug("Configuration session cert to: " + cert)
 

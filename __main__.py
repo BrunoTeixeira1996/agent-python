@@ -8,6 +8,7 @@ from time import sleep
 
 import psutil as psutil
 import argparse
+import requests
 
 from htpclient.binarydownload import BinaryDownload
 from htpclient.chunk import Chunk
@@ -70,7 +71,7 @@ def run_health_check():
     if len(states) > 0:
         num_gpus = len(states[0].get_temps())
     else:
-        errors.append("Faild to retrieve one successful cracker state, most likely due to failing.")
+        errors.append("Failed to retrieve one successful cracker state, most likely due to failing.")
         num_gpus = 0
     query = copy_and_set_token(dict_sendHealthCheck, CONFIG.get_value('token'))
     query['checkId'] = check_id
@@ -85,7 +86,7 @@ def run_health_check():
         logging.error("Failed to send health check results!")
         sleep(5)
         return
-    elif ans['response'] != 'OK':
+    elif ans['response'] != 'OK' and ans['response'] != 'SUCCESS':  # the response 'OK' is legacy and should be removed after some time
         logging.error("Error on sending health check results: " + str(ans))
         sleep(5)
         return

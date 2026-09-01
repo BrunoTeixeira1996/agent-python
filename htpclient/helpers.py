@@ -8,6 +8,7 @@ from types import MappingProxyType
 from pathlib import Path
 
 import os
+import shutil
 import subprocess
 
 from htpclient.dicts import copy_and_set_token, dict_clientError
@@ -67,7 +68,10 @@ def start_uftpd(os_extension, config):
         subprocess.check_output("killall -s 9 uftpd", shell=True)
     except subprocess.CalledProcessError:
         pass  # ignore in case uftpd was not running
-    path = './uftpd' + os_extension
+    path = retrieve_binary('uftpd' + os_extension)
+    if not path:
+        logging.error("uftpd binary not found, cant do multicast")
+        return
     cmd = path + ' '
     if config.get_value('multicast-device'):
         cmd += "-I " + config.get_value('multicast-device') + ' '
@@ -144,3 +148,21 @@ def parse_http_headers(header_str):
                 key, value = pair.split(':', 1)
                 headers[key.strip()] = value.strip()
     return headers
+
+
+# function to retrieve a system or local binary.
+def retrieve_binary(binary):
+    cwd = Path.cwd()
+    # use full path so that it works on Windows and Linux
+    local_binary = cwd / binary
+
+    # First check if there is a local binary and use that if it is there
+    if local_binary.exists() and local_binary.is_file():
+        return str(local_binary)
+
+    # Fall back on system binary
+    system_binary = shutil.which(binary)
+
+    if system_binary:
+        return system_binary
+    return None

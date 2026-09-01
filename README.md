@@ -31,14 +31,13 @@ Please note:
 ### Command Line Arguments
 
 ```
-usage: python3 hashtopolis.zip [-h] [--de-register] [--version] [--number-only] [--disable-update] [--debug] [--voucher VOUCHER] [--url URL] [--cert CERT] [--files-path FILES_PATH]
-                               [--crackers-path CRACKERS_PATH] [--hashlists-path HASHLISTS_PATH] [--preprocessors-path PREPROCESSORS_PATH] [--zaps-path ZAPS_PATH] [--cpu-only]
-                               [--http-headers HTTP_HEADERS]
+usage: python3 hashtopolis.zip [-h] [--de-register] [--version] [--number-only] [--disable-update] [--debug] [--voucher VOUCHER] [--url URL]
+                               [--cert CERT] [--files-path FILES_PATH] [--crackers-path CRACKERS_PATH] [--hashlists-path HASHLISTS_PATH]
+                               [--preprocessors-path PREPROCESSORS_PATH] [--zaps-path ZAPS_PATH] [--cpu-only] [--http-headers HTTP_HEADERS]
 
+Hashtopolis Client v0.7.5
 
-Hashtopolis Client v0.7.3
-
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --de-register         client should automatically de-register from server now
   --version             show version information
@@ -61,6 +60,7 @@ optional arguments:
   --cpu-only            Force client to register as CPU only and also only reading out CPU information
   --http-headers HTTP_HEADERS
                         Use given http headers in all HTTP requests, format: "Header1: Value1, Header2: Value2"
+
 ```
 
 ### Config
@@ -130,6 +130,9 @@ In order to use the multicast distribution for files, please make sure that the 
 
 The list contains all Hashcat versions with which the client was tested and is able to work with (other versions might work):
 
+* 7.1.1
+* 7.1.0
+* 7.0.0
 * 6.2.6
 * 6.2.5
 * 6.2.4
